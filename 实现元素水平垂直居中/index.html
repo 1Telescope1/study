@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .son {
+        height: 200px;
+        width: 200px;
+        background-color: red;
+      }
+      .father1 {
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 300px;
+        width: 300px;
+        background-color: aqua;
+      }
+      .father2 {
+        margin-bottom: 20px;
+        position: relative;
+        height: 300px;
+        width: 300px;
+        background-color: aqua;
+      }
+      .son2 {
+        position: absolute;
+        transform: translate(-50%, -50%);
+        top: 50%;
+        left: 50%;
+        height: 200px;
+        width: 200px;
+        background-color: red;
+      }
+      .father3 {
+        margin-bottom: 20px;
+        position: relative;
+        height: 300px;
+        width: 300px;
+        background-color: aqua;
+      }
+      .son3 {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        height: 200px;
+        width: 200px;
+        background-color: red;
+        margin: auto;
+      }
+      .father4 {
+        margin-bottom: 20px;
+        display: flex;
+        height: 300px;
+        width: 300px;
+        background-color: aqua;
+      }
+      .son4 {
+        margin: auto;
+        height: 200px;
+        width: 200px;
+        background-color: red;
+      }
+      .father5 {
+        display: grid;
+        margin-bottom: 20px;
+        height: 300px;
+        width: 300px;
+        background-color: aqua;
+      }
+      .son5 {
+        margin: auto;
+        height: 200px;
+        width: 200px;
+        background-color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="father1">
+      <div class="son">flex</div>
+    </div>
+
+    <div class="father2">
+      <div class="son2">定位+transform</div>
+    </div>
+
+    <div class="father3">
+      <div class="son3">定位+margin:auto</div>
+    </div>
+
+    <div class="father4">
+      <div class="son4">flex+margin:auto</div>
+    </div>
+
+    <div class="father5">
+      <div class="son5">grid+margin:auto</div>
+    </div>
+  </body>
+</html>
