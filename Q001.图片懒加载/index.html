@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title></title>
+    <style>
+      img {
+        display: block;
+        margin-bottom: 50px;
+        height: 200px;
+        width: 400px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- 空的图片容器 -->
+    <div id="imageContainer"></div>
+    <script src="common.js"></script>
+
+    <script>
+      window.addEventListener('DOMContentLoaded', initImag);
+
+      function loadImage(url) {
+        return new Promise((resolve, reject) => {
+          const image = new Image();
+          image.src = url;
+
+          image.onload = () => resolve(image);
+          image.onerror = () =>
+            reject(new Error(`Failed to load image from ${url}`));
+        });
+      }
+
+      function lazyload() {
+        // viewPortHeight 兼容所有浏览器写法，可视区高度
+        const viewPortHeight =
+          window.innerHeight ||
+          document.documentElement.clientHeight ||
+          document.body.clientHeight;
+        const container = document.getElementById('imageContainer');
+        const imgs = container.querySelectorAll('img');
+
+        imgs.forEach((img) => {
+          // 图片未加载过
+          if (img.dataset.src) {
+            // 获取图片相对于视口的位置信息
+            const rect = img.getBoundingClientRect();
+            // 判断图片这可视觉区
+            const flag = rect.top >= 0 && rect.top <= viewPortHeight;
+            if (flag) {
+              loadImage(img.dataset.src)
+                .then((loadedImage) => {
+                  img.src = loadedImage.src; // 加载成功，设置src为data-src的值
+                })
+                .catch((error) => {
+                  console.error(error);
+                  img.src = errorUrl; // 加载失败，显示错误图片
+                })
+                .finally(() => {
+                  img.removeAttribute('data-src');
+                });
+            }
+          }
+        });
+      }
+
+      // 在页面加载时调用lazyload函数
+      window.addEventListener('DOMContentLoaded', lazyload);
+      window.addEventListener('scroll', lazyload);
+    </script>
+  </body>
+</html>

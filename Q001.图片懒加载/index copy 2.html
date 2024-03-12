@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>offsetTop计算实现图片懒加载</title>
+    <style>
+      img {
+        display: block;
+        margin-bottom: 50px;
+        height: 200px;
+        width: 400px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- 空的图片容器 -->
+    <div id="imageContainer"></div>
+    <script src="common.js"></script>
+
+    <script>
+      window.addEventListener('DOMContentLoaded', () => {
+        initImag();
+        const container = document.getElementById('imageContainer');
+        const imgs = container.querySelectorAll('img');
+
+        imgs.forEach((img) => {
+          observer.observe(img);
+        });
+      });
+
+      function loadImage(url) {
+        return new Promise((resolve, reject) => {
+          const image = new Image();
+          image.src = url;
+
+          image.onload = () => resolve(image);
+          image.onerror = () =>
+            reject(new Error(`Failed to load image from ${url}`));
+        });
+      }
+
+      const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const img = entry.target;
+            const url = img.getAttribute('data-src');
+            if (url) {
+              loadImage(url)
+                .then((loadedImage) => {
+                  img.src = loadedImage.src; // 加载成功，设置src为data-src的值
+                })
+                .catch((errorUrl) => {
+                  console.error(error);
+                  img.src = errorUrl; // 加载失败，显示错误图片
+                })
+                .finally(() => {
+                  img.removeAttribute('data-src');
+                  observer.unobserve(img);
+                });
+            }
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
