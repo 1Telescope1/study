@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Router</title>
+</head>
+<body>
+
+  <ul>
+    <li><a href="#/">Home</a></li>
+    <li><a href="#/about">About</a></li>
+    <li><a href="#/contact">Contact</a></li>
+  </ul>
+
+  <div id="content"></div>
+
+  <script>
+    class SimpleRouter {
+      constructor() {
+        this.routes = {};
+        this.currentRoute = null;
+        this.contentElement = document.getElementById('content');
+      }
+
+      addRoute(path, callback) {
+        this.routes[path] = callback;
+      }
+
+      navigate() {
+        const path = window.location.hash.slice(1) || '/';
+        const callback = this.routes[path];
+
+        if (callback) {
+          this.currentRoute = path;
+          callback();
+        } else {
+          this.currentRoute = null;
+        }
+      }
+
+      init() {
+        window.addEventListener('hashchange', () => this.navigate());
+        this.navigate();
+      }
+    }
+
+    const router = new SimpleRouter();
+
+    router.addRoute('/', () => {
+      document.getElementById('content').innerText = 'Home Page';
+    });
+
+    router.addRoute('/about', () => {
+      document.getElementById('content').innerText = 'About Page';
+    });
+
+    router.addRoute('/contact', () => {
+      document.getElementById('content').innerText = 'Contact Page';
+    });
+
+    router.init();
+  </script>
+</body>
+</html>
