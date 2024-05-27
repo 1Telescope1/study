@@ -40,6 +40,6 @@ function requestQue(request, max) {
   });
 }
 
-requestList.forEach((request) => {
+requestList.forEach((request, index) => {
   requestQue(request, 10);
 });

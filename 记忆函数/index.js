@@ -1,8 +1,9 @@
-function memorize(fn) {
+function memorize(fn, context) {
   const cache = {};
+  context = context || this;
   return (...args) => {
     if (!cache[args]) {
-      cache[args] = fn.apply(this, args);
+      cache[args] = fn.apply(context, args);
     }
 
     return cache[args];

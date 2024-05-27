@@ -27,3 +27,4 @@ function formatNumberWithRegex(num) {
 }
 
 console.log(formatNumberWithRegex(num));
+console.log(3 % 3);
