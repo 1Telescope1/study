@@ -3,67 +3,36 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>File Upload</title>
+    <style>
+      .box {
+        width: 200px;
+        background-color: #f0f0f0;
+        margin: 30px;
+
+        /* 开启BFC */
+        /* float: left;
+        
+        position: absolute;
+
+        overflow: auto;
+
+        display: inline-block;
+
+        display: flow-root;
+
+        column-count: 1;
+
+        display: table; */
+      }
+      .container {
+        background-color: #e0e0e0;
+      }
+    </style>
   </head>
   <body>
-    <input type="file" id="fileInput" />
-    <script>
-      const fileInput = document.getElementById('fileInput');
-
-      if (fileInput) {
-        fileInput.addEventListener('change', async () => {
-          const file = fileInput.files[0];
-          if (!file) return;
-
-          const chunkSize = Math.ceil(file.size / 10); // 计算每片的大小
-          const promises = []; // 存放读取文件片段的 Promise
-
-          for (let i = 0; i < 10; i++) {
-            const start = i * chunkSize;
-            const end = Math.min((i + 1) * chunkSize, file.size);
-            const chunk = file.slice(start, end); // 切分文件片段
-
-            const fileReader = new FileReader();
-            const promise = new Promise((resolve) => {
-              fileReader.onload = (e) => {
-                const fileBuffer = e.target.result;
-                resolve(fileBuffer);
-              };
-            });
-
-            fileReader.readAsArrayBuffer(chunk); // 读取文件片段内容
-            promises.push(promise); // 将 Promise 添加到数组中
-          }
-
-          // 等待所有片段读取完毕
-          Promise.all(promises).then((chunkBuffers) => {
-            console.log('All chunks read:', chunkBuffers);
-            const mergedBuffer = mergeChunks(chunkBuffers);
-            const fileBlob = new Blob([mergedBuffer]);
-            handleFileBlob(fileBlob);
-          });
-        });
-      }
-
-      // 合并分片为完整文件
-      function mergeChunks(chunkBuffers) {
-        const mergedBuffer = new Uint8Array(
-          chunkBuffers.reduce((acc, buffer) => acc + buffer.byteLength, 0)
-        );
-        let offset = 0;
-        chunkBuffers.forEach((buffer) => {
-          mergedBuffer.set(new Uint8Array(buffer), offset);
-          offset += buffer.byteLength;
-        });
-        return mergedBuffer;
-      }
-
-      // 处理完整文件
-      function handleFileBlob(fileBlob) {
-        const fileURL = URL.createObjectURL(fileBlob);
-        console.log('Merged file URL:', fileURL);
-        // 这里可以将文件 URL 显示在页面上或者进行其他操作
-      }
-    </script>
+    <div class="container">
+      <div class="box">Box 1</div>
+      <div class="box">Box 2</div>
+    </div>
   </body>
 </html>
