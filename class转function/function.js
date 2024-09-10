@@ -18,3 +18,5 @@ Object.defineProperty(Example.prototype, 'func', {
   //方法不能被枚举
   enumerable: false
 });
+
+new Example().func()

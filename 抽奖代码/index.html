@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tab Switch with Smooth Background Transition</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f4f4f4;
+        font-family: Arial, sans-serif;
+      }
+
+      .tabs-container {
+        width: 100%;
+        max-width: 600px;
+      }
+
+      .tabs {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        background-color: #fff;
+        padding: 10px;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .tab {
+        flex: 1;
+        text-align: center;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-weight: bold;
+        position: relative;
+        z-index: 1;
+      }
+
+      .tab.active {
+        color: #fff;
+      }
+
+      .tab-indicator {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 100%;
+        background-color: #3498db;
+        background-image: url("https://gift-pypu-cdn.didistatic.com/static/driver_miniprogram/do1_bxutE9a7xRWtvMi94mC2");
+        border-radius: 8px;
+        z-index: 0;
+        transition: width 0.3s, left 0.3s;
+      }
+
+      .tab-content {
+        margin-top: 20px;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .content-item {
+        display: none;
+      }
+
+      .content-item.active {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="tabs-container">
+      <div class="tabs">
+        <div class="tab" data-index="0">Tab 1</div>
+        <div class="tab" data-index="1">Tab 2</div>
+        <div class="tab" data-index="2">Tab 3</div>
+        <div class="tab-indicator"></div>
+      </div>
+      <div class="tab-content">
+        <div class="content-item" data-index="0">Content 1</div>
+        <div class="content-item" data-index="1">Content 2</div>
+        <div class="content-item" data-index="2">Content 3</div>
+      </div>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const tabs = document.querySelectorAll(".tab")
+        const contents = document.querySelectorAll(".content-item")
+        const tabIndicator = document.querySelector(".tab-indicator")
+
+        // Initialize: Set first tab and content active
+        tabs[0].classList.add("active")
+        contents[0].classList.add("active")
+
+        // Set the initial position and size of the tab indicator
+        updateTabIndicator(tabs[0])
+
+        tabs.forEach((tab, index) => {
+          tab.addEventListener("click", () => {
+            // Remove active states
+            tabs.forEach((t) => t.classList.remove("active"))
+            contents.forEach((c) => c.classList.remove("active"))
+
+            // Add active states to clicked tab and corresponding content
+            tab.classList.add("active")
+            contents[index].classList.add("active")
+
+            // Move the tab indicator to the clicked tab
+            updateTabIndicator(tab)
+          })
+        })
+
+        function updateTabIndicator(activeTab) {
+          const tabWidth = activeTab.offsetWidth
+          const tabLeft = activeTab.offsetLeft
+
+          tabIndicator.style.width = `${tabWidth}px`
+          tabIndicator.style.left = `${tabLeft}px`
+        }
+      })
+    </script>
+  </body>
+</html>
