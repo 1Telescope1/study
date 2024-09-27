@@ -6,7 +6,7 @@ function myNew(constructor, ...args) {
   // 将构建函数的this指向新对象，并执行构造函数的代码
   const result = constructor.apply(obj, args);
   // 如果构造函数返回的是对象，则返回该对象；否则返回新创建的对象
-  return result instanceof Object ? result : obj
+  return (result && result instanceof Object) ? result : obj
 }
 function Person(name, age) {
   this.name = name;

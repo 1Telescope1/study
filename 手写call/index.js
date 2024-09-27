@@ -4,7 +4,7 @@ Function.prototype.myCall = function (ctx, ...args) {
     throw new TypeError('Error')
   }
   // 防止是null或undified的情况下 ctx[key]会报错
-  ctx = ctx || globalThis
+  ctx = ctx ===null || ctx === undefined ? globalThis : Object(ctx)
   const key = Symbol('temp')
   Object.defineProperty(ctx, key, {
     enumerable: false,

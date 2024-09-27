@@ -6,8 +6,9 @@ function formatNumberWithCommas(num) {
   const len = a.length;
   let res = [];
   while (a.length) {
-    res.unshift(a.pop());
-    if ((len - a.length) % 3 == 0 && a.length != 0) {
+    const s = a.pop()
+    res.unshift(s);
+    if ((len - a.length) % 3 == 0 && a.length != 0 && a[a.length - 1] != '-') {
       res.unshift(',');
     }
   }
@@ -17,7 +18,7 @@ function formatNumberWithCommas(num) {
   return res.join('');
 }
 
-const num = -1234.123456789;
+const num = -123456.123456789;
 
 console.log(formatNumberWithCommas(num));
 

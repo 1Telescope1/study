@@ -20,7 +20,7 @@ function sum(...args) {
 }
 
 console.log(sum(1, 2, 3).valueOf());
-console.log(sum(1)(2, 3, 4) + sum(5));
+console.log(sum(1)(2, 3, 4));
 // function sum(...args) {
 //   const foo = (...rest) => sum(...args, ...rest);
 //   foo.toString = () => args.reduce((x, y) => x + y, 0);

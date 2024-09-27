@@ -3,154 +3,50 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>抽奖</title>
-    <link rel="stylesheet" href="styles.css" />
+    <title>Document</title>
+    <style>
+      .header {
+        background-color: rgb(142, 188, 143);
+        height: 100px;
+        text-align: center;
+      }
+      .content {
+        display: flex;
+        height: 500px;
+      }
+      .left {
+        width: 150px;
+        background-color: rgb(0, 0, 255);
+        text-align: center;
+      }
+      .right {
+        width: 150px;
+        background-color: rgb(154, 49, 205);
+        text-align: center;
+      }
+      .middle {
+        flex: 1;
+        background-color: rgb(255, 20, 49);
+      }
+      .footer {
+        background-color: rgb(48, 80, 76);
+        height: 100px;
+        text-align: center;
+      }
+    </style>
   </head>
-  <style>
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      background-color: #f5f5f5;
-    }
-
-    .lottery-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .lottery-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 100px);
-      grid-template-rows: repeat(2, 100px);
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-
-    .lottery-item {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: #ffcc00;
-      border: 2px solid #333;
-      font-size: 18px;
-      font-weight: bold;
-    }
-
-    .lottery-item.active {
-      background-color: #ff5733;
-    }
-
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-  </style>
   <body>
-    <div class="lottery-container">
-      <div class="lottery-grid">
-        <div class="lottery-item" data-index="0">奖品1</div>
-        <div class="lottery-item" data-index="1">奖品2</div>
-        <div class="lottery-item" data-index="2">奖品3</div>
-        <div class="lottery-item" data-index="3">奖品4</div>
-        <div class="lottery-item" data-index="4">奖品5</div>
-        <div class="lottery-item" data-index="5">奖品6</div>
+    <div class="contain">
+      <div class="header">header</div>
+      <div class="content">
+        <div class="left">left</div>
+        <div class="middle">content</div>
+        <div class="right">right</div>
       </div>
-      <button id="startBtn">开始抽奖</button>
+      <div class="footer">footer</div>
     </div>
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        // 获取所有抽奖格子元素
-        const items = document.querySelectorAll(".lottery-item")
-
-        // 获取“开始抽奖”按钮元素
-        const startBtn = document.getElementById("startBtn")
-
-        // 当前高亮的格子索引，初始值为-1，表示没有格子被高亮
-        let activeIndex = -1
-
-        // 用于标记抽奖是否正在进行，避免重复点击开始按钮
-        let isRunning = false
-
-        // 预定义的高亮路径，顺序为按顺时针从左上角开始的格子
-        const walkPath = [0, 1, 2, 5, 4, 3]
-
-        // 设置动画转动的圈数
-        const turns = 6
-
-        // 设置动画的总时长（毫秒）
-        const duration = 4000
-
-        // 缓动函数：用于实现缓慢停止的效果
-        const easeOutCubic = (value) => 1 - Math.pow(1 - value, 3)
-
-        // 重置并返回高亮路径，确保每次动画从当前高亮的格子开始
-        const resetWalkPath = () => {
-          const path = walkPath.slice() // 复制路径数组
-          const realIndex = activeIndex !== -1 ? path.indexOf(activeIndex) : 0 // 获取当前高亮的格子在路径中的索引
-          const front = path.splice(realIndex) // 切出从当前高亮格子开始的路径
-          path.unshift(...front) // 将切出的部分移到数组开头
-          return path // 返回新的高亮路径
-        }
-
-        // 清除所有格子的高亮状态
-        const clearActiveState = () => {
-          items.forEach((item) => item.classList.remove("active"))
-        }
-
-        // 抽奖动画的主逻辑函数
-        const play = (targetIndex) => {
-          if (isRunning) return // 如果正在运行，直接返回，避免重复触发
-          isRunning = true // 标记抽奖开始
-          const startTime = Date.now() // 获取动画开始的时间
-          const walkPath = resetWalkPath() // 获取重置后的高亮路径
-          console.log("随机生成的下标", targetIndex)
-          targetIndex = walkPath.indexOf(targetIndex) // 获取目标格子在路径中的索引
-          console.log("目标的下标", targetIndex)
-          const offset = 1 / ((turns - 1) * items.length + targetIndex + 1) // 计算每步的偏移量
-          const __mpx_mode__ = 'web'
-          const rAF =
-            __mpx_mode__ === "web"
-              ? window.requestAnimationFrame || ((func) => setTimeout(func, 16))
-              : (func) => setTimeout(func, 16)
-          console.log(rAF);
-          // 动画帧函数
-          const frameFunc = () => {
-            const progress = (Date.now() - startTime) / duration // 计算动画进度
-            if (progress < 0.8) {
-              // 动画进行中的大部分时间
-              const index =
-                Math.floor(easeOutCubic(progress) / offset) % items.length // 计算当前高亮的格子索引
-              console.log(easeOutCubic(progress),Math.floor(easeOutCubic(progress) / offset),index)
-              clearActiveState() // 清除之前的高亮状态
-              activeIndex = walkPath[index] // 设置当前高亮的格子索引
-              items[activeIndex].classList.add("active") // 高亮当前格子
-              rAF(frameFunc) // 请求下一帧
-            } else {
-              // 当动画接近结束时
-              clearActiveState() // 清除所有高亮状态
-              activeIndex = walkPath[targetIndex] // 最终高亮目标格子
-              items[activeIndex].classList.add("active") // 高亮目标格子
-              isRunning = false // 动画结束，重置运行状态
-              alert(`恭喜你获得奖品：${items[activeIndex].textContent}`) // 弹出中奖提示
-            }
-          }
-
-          // 开始动画
-          rAF(frameFunc)
-        }
-
-        // 绑定“开始抽奖”按钮的点击事件
-        startBtn.addEventListener("click", () => {
-          const targetIndex = Math.floor(Math.random() * items.length) //随机生成目标格子的索引
-          // 假设值是5，高亮路径的下标是3，所以最后停留在的是礼物6，
-          play(targetIndex) // 运行抽奖逻辑
-        })
-      })
-    </script>
   </body>
+  <script>
+    console.log(document.all['']);
+  </script>
 </html>

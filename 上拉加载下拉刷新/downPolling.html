@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>下拉刷新示例</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+    }
+    #container {
+      width: 100%;
+      height: 500px;
+      overflow-y: scroll; /* 开启纵向滚动 */
+      background-color: #fff;
+      border: 1px solid #ccc;
+      position: relative;
+    }
+    #refresh {
+      position: absolute;
+      top: -50px; /* 刷新提示框在容器外，初始不可见 */
+      left: 0;
+      width: 100%;
+      height: 50px;
+      text-align: center;
+      line-height: 50px;
+      background-color: #4caf50;
+      color: #fff;
+      transition: top 0.3s; /* 动画过渡效果 */
+    }
+    #list {
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+    #list li {
+      padding: 15px;
+      border-bottom: 1px solid #ddd;
+    }
+  </style>
+</head>
+<body>
+
+<div id="container">
+  <div id="refresh">释放刷新...</div>
+  <ul id="list">
+    <!-- 初始数据 -->
+    <li>Item 1</li>
+    <li>Item 2</li>
+    <li>Item 3</li>
+    <li>Item 4</li>
+    <li>Item 5</li>
+  </ul>
+</div>
+
+<script>
+  const container = document.getElementById('container');
+  const refresh = document.getElementById('refresh');
+  const list = document.getElementById('list');
+
+  let touchStartY = 0; // 记录 touchstart 时的 Y 坐标
+  let touchMoveY = 0; // 记录 touchmove 时的 Y 坐标
+  let isRefreshing = false; // 是否正在刷新
+  const refreshThreshold = 50; // 下拉距离达到此值时触发刷新
+
+  // 模拟数据请求
+  function fetchNewData() {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const newData = [];
+        for (let i = 1; i <= 5; i++) {
+          newData.push(`New Item ${Math.random().toFixed(3)}`);
+        }
+        resolve(newData);
+      }, 1000); // 模拟网络请求延迟
+    });
+  }
+
+  // 更新列表数据
+  async function refreshData() {
+    if (isRefreshing) return;
+    isRefreshing = true;
+    refresh.textContent = '刷新中...';
+    refresh.style.top = '0'; // 显示刷新提示
+
+    // 获取新数据并添加到列表顶部
+    const newData = await fetchNewData();
+    newData.reverse().forEach(item => {
+      const li = document.createElement('li');
+      li.textContent = item;
+      list.insertBefore(li, list.firstChild);
+    });
+
+    // 恢复刷新提示位置
+    setTimeout(() => {
+      refresh.textContent = '释放刷新...';
+      refresh.style.top = '-50px';
+      isRefreshing = false;
+    }, 1000); // 模拟刷新完成后延迟一秒收起提示
+  }
+
+  // 触摸开始事件
+  container.addEventListener('touchstart', (e) => {
+    if (container.scrollTop === 0 && !isRefreshing) { // 仅在滚动条在顶部时记录起始位置
+      touchStartY = e.touches[0].clientY;
+    }
+  });
+
+  // 触摸移动事件
+  container.addEventListener('touchmove', (e) => {
+    if (container.scrollTop === 0 && !isRefreshing) { // 仅在滚动条在顶部时响应
+      touchMoveY = e.touches[0].clientY;
+      const pullDownDistance = touchMoveY - touchStartY;
+
+      if (pullDownDistance > 0) { // 下拉时才更新刷新提示
+        refresh.style.top = `${Math.min(pullDownDistance - 50, 0)}px`;
+        e.preventDefault(); // 阻止默认下拉行为
+      }
+    }
+  });
+
+  // 触摸结束事件
+  container.addEventListener('touchend', () => {
+    if (container.scrollTop === 0 && !isRefreshing) { // 仅在滚动条在顶部时触发
+      const pullDownDistance = touchMoveY - touchStartY;
+      
+      if (pullDownDistance > refreshThreshold) {
+        refreshData(); // 触发刷新操作
+      } else {
+        // 恢复刷新提示位置
+        refresh.style.top = '-50px';
+      }
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>上拉加载示例</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+    }
+    #container {
+      width: 100%;
+      height: 500px;
+      overflow-y: scroll; /* 开启纵向滚动 */
+      background-color: #fff;
+      border: 1px solid #ccc;
+    }
+    #list {
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+    #list li {
+      padding: 15px;
+      border-bottom: 1px solid #ddd;
+    }
+    #loading {
+      text-align: center;
+      padding: 15px;
+      display: none; /* 默认隐藏加载提示 */
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+
+<div id="container">
+  <ul id="list">
+    <!-- 初始数据 -->
+    <li>Item 1</li>
+    <li>Item 2</li>
+    <li>Item 3</li>
+    <li>Item 4</li>
+    <li>Item 5</li>
+  </ul>
+  <div id="loading">加载中...</div>
+</div>
+
+<script>
+  // 获取DOM元素
+  const container = document.getElementById('container');
+  const list = document.getElementById('list');
+  const loading = document.getElementById('loading');
+
+  let touchStartY = 0; // 记录touchstart时的Y坐标
+  let touchEndY = 0; // 记录touchend时的Y坐标
+  let isLoading = false; // 标记是否正在加载数据
+  let currentPage = 1; // 当前页数
+  const pageSize = 5; // 每次加载的条数
+
+  // 模拟数据请求
+  function fetchData(page, pageSize) {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const data = [];
+        for (let i = 1; i <= pageSize; i++) {
+          data.push(`Item ${(page - 1) * pageSize + i}`);
+        }
+        resolve(data);
+      }, 1000); // 模拟网络请求延迟
+    });
+  }
+
+  // 加载更多数据
+  async function loadMoreData() {
+    if (isLoading) return;
+    isLoading = true;
+    loading.style.display = 'block'; // 显示加载提示
+    currentPage += 1;
+
+    // 获取新数据
+    const newData = await fetchData(currentPage, pageSize);
+    newData.forEach(item => {
+      const li = document.createElement('li');
+      li.textContent = item;
+      list.appendChild(li);
+    });
+
+    loading.style.display = 'none'; // 隐藏加载提示
+    isLoading = false;
+  }
+
+  // 触摸开始事件
+  container.addEventListener('touchstart', (e) => {
+    touchStartY = e.touches[0].clientY;
+  });
+
+  // 触摸移动事件
+  container.addEventListener('touchmove', (e) => {
+    touchEndY = e.touches[0].clientY;
+  });
+
+  // 触摸结束事件
+  container.addEventListener('touchend', () => {
+    const touchDiff = touchStartY - touchEndY; // 计算滑动的距离
+
+    // 如果是向上滑动，并且滚动到底部
+    if (touchDiff > 50 && !isLoading) {
+      // 容器元素当前的滚动位置，即垂直方向滚动条滚动的距离
+      const scrollTop = container.scrollTop;
+      // 容器元素的可见高度，即用户视口中可见部分的高度
+      const containerHeight = container.clientHeight;
+      // 容器中实际内容的总高度，即所有列表项加起来的高度
+      const contentHeight = container.scrollHeight;
+      console.log(scrollTop, containerHeight, 789);
+      console.log(scrollTop + containerHeight, contentHeight, 123);
+      if (scrollTop + containerHeight >= contentHeight - 10) { // 距离底部10px时触发加载
+        loadMoreData();
+      }
+    }
+  });
+</script>
+
+</body>
+</html>

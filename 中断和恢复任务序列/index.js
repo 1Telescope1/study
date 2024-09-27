@@ -6,7 +6,7 @@ function processTasks(tasks) {
 
   function start() {
     return new Promise(async (resolve, reject) => {
-      if(prom) {
+      if (prom) {
         resolve(prom)
       }
       if (!stop) return
@@ -15,7 +15,7 @@ function processTasks(tasks) {
         try {
           console.log("执行中", index)
           const res = await tasks[index]()
-          console.log(res, "执行完成", index);
+          console.log(res, "执行完成", index)
           result.push(res)
         } catch (error) {
           stop = true
@@ -74,11 +74,11 @@ const { start, pause, stopProcess, index } = processTasks(tasks)
 // }, 7000)
 async function test() {
   const result = await start()
-  console.log(result);
+  console.log(result)
   setTimeout(async () => {
-    const res =await start()
-    console.log(res);
-  }, 10000);
+    const res = await start()
+    console.log(res)
+  }, 10000)
 }
 
 test()
