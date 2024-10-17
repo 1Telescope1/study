@@ -40,9 +40,9 @@ function requestQue(request, max) {
   });
 }
 
-requestList.forEach((request, index) => {
-  requestQue(request, 10);
-});
+// requestList.forEach((request, index) => {
+//   requestQue(request, 10);
+// });
 
 class Scheduler {
   constructor() {
@@ -96,3 +96,4 @@ addTask(1000, 1) // 1秒后输出 -- order 1
 addTask(2000, 2) // 2秒后输出 -- order 2
 addTask(300, 3) // 300毫秒后输出 -- order 3
 addTask(400, 4) // 400毫秒后输出 -- order 4
+

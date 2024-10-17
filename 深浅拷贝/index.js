@@ -3,6 +3,7 @@ function deepClone(obj, hash = new WeakMap()) {
   if (obj == null) return obj;
   if (obj instanceof Date) return new Date(obj);
   if (obj instanceof RegExp) return new RegExp(obj);
+  if (typeof obj === "function") return obj
   if (typeof obj != 'object') return obj;
   if (hash.get(obj)) return hash.get(obj);
   // 使用 new obj.constructor() 可以确保克隆对象与原始对象具有相同的构造函数。这样可以保留原始对象的类型信息，并确保克隆对象具有与原始对象相同的行为和属性。
