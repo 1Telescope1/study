@@ -1,77 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>File MD5 Calculation Test</title>
-  <script src="https://cdn.jsdelivr.net/npm/spark-md5@3.0.0/spark-md5.min.js"></script>
-</head>
-<body>
-  <h1>File Upload and MD5 Hash Calculation</h1>
-  <input type="file" id="fileInput" />
-  <p id="status">Please upload a file to calculate its MD5 hash.</p>
-  
-  <h2>Overall File Hash</h2>
-  <p>MD5 Hash: <span id="overallHash"></span></p>
-  <p>Time Taken: <span id="overallTime"></span> ms</p>
-
-  <h2>Chunked File Hashes</h2>
-  <p>Time Taken for 10 Chunks: <span id="chunkTime"></span> ms</p>
-
-  <script>
-    document.getElementById('fileInput').addEventListener('change', function(e) {
-      const file = e.target.files[0];
-      if (!file) {
-        return;
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>摄像头权限请求</title>
+    <style>
+      .first {
+        background-color: aqua;
+        height: 150vh;
       }
-
-      // 1. Overall File Hash Calculation
-      const overallStartTime = Date.now();
-      const reader = new FileReader();
-      const overallSpark = new SparkMD5.ArrayBuffer();
-
-      reader.onload = function(e) {
-        overallSpark.append(e.target.result);
-        const overallHash = overallSpark.end();
-        const overallEndTime = Date.now();
-
-        document.getElementById('overallHash').textContent = overallHash;
-        document.getElementById('overallTime').textContent = overallEndTime - overallStartTime;
-      };
-
-      reader.readAsArrayBuffer(file);
-
-      // 2. Chunked Hash Calculation (10 chunks)
-      const chunkStartTime = Date.now();
-      const chunkSize = Math.ceil(file.size / 10);
-      const chunkSpark = new SparkMD5.ArrayBuffer();
-      const fileReader = new FileReader();
-      let currentChunk = 0;
-
-      fileReader.onload = function(e) {
-        chunkSpark.append(e.target.result);  // Append the current chunk
-
-        currentChunk++;
-        if (currentChunk < 10) {
-          loadNextChunk();
-        } else {
-          const chunkEndTime = Date.now();
-          document.getElementById('chunkTime').textContent = chunkEndTime - chunkStartTime;
-        }
-      };
-
-      fileReader.onerror = function() {
-        document.getElementById('status').textContent = 'Error reading file.';
-      };
-
-      function loadNextChunk() {
-        const start = currentChunk * chunkSize;
-        const end = Math.min(start + chunkSize, file.size);
-        fileReader.readAsArrayBuffer(file.slice(start, end));
+      .second {
+        background-color: bisque;
+        height: 120vh;
       }
-
-      loadNextChunk(); // Start reading the first chunk
-    });
-  </script>
-</body>
+    </style>
+  </head>
+  <body>
+    <div class="first">123first</div>
+    <div class="second" id="second">second</div>
+    <script>
+      window.addEventListener('mousedown', (e) => {
+        console.log(e.path);
+      })
+      window.onerror = function (msg, url, row, col, error) {
+        console.log('window.onerror');
+        console.log("异步错误！")
+        console.log("错误描述:" + msg)
+        console.log("报错文件:" + url)
+        console.log("行号:" + row)
+        console.log("列号:" + col)
+        console.log("错误对象:" + error)
+      }
+      try {
+        setTimeout(() => {
+          throw new Error(123)
+        })
+      } catch (error) {
+        console.log(error, 123);
+      }
+      
+    </script>
+  </body>
 </html>

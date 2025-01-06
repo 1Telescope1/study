@@ -65,11 +65,11 @@ function convert2(nodes) {
   return map.get(0);
 }
 
-const newTree = convert(nodes);
+// const newTree = convert(nodes);
 
 const newTree2 = convert2(nodes);
 
 // console.log(JSON.stringify(newTree));
 
 // console.log(newTree2);
-console.log(JSON.stringify(newTree2));
+console.log((newTree2));
